@@ -32,7 +32,7 @@ public class GeraRodape {
         }
         return pnlRodape;
     }
-    public JPanel getPnlRodapeManipularCliente(JButton btnAtualizar, JButton btnDeletar, JButton btnLimparCampos,JButton btnBotaoSair,JButton btnVoltar) {
+    public JPanel getPnlRodapeManipularEntidade(JButton btnAtualizar, JButton btnDeletar, JButton btnLimparCampos,JButton btnBotaoSair,JButton btnVoltar) {
 
         if (pnlRodape == null) {
 

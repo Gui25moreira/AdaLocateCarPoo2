@@ -6,7 +6,7 @@ import model.repositorys.Entidade;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Veiculo implements Comparable, Serializable{
+public class Veiculo implements Comparable, Serializable, Entidade{
 
     private String modelo;
     private String anoDeFabricacao;
@@ -85,11 +85,19 @@ public class Veiculo implements Comparable, Serializable{
         isAlugado = alugado;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getTipoDoVeiculo() {
+        return tipoDoVeiculo;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setTipoDoVeiculo(String tipoDoVeiculo) {
+        this.tipoDoVeiculo = tipoDoVeiculo;
+    }
+
+    public String toString() {
+        return "Veiculo{" +
+                "Modelo='" + getModelo() + "'," +
+                '\'' +
+                "Placa='" + getId() + '\'' +
+                '}';
     }
 }

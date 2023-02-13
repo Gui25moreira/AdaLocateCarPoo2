@@ -5,7 +5,7 @@ import model.clientes.Cliente;
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
-public class JTableModel extends AbstractTableModel {
+public class JTableModelCliente extends AbstractTableModel {
 
     private final String[] nomesColunas = {
             "Nome",
@@ -14,7 +14,7 @@ public class JTableModel extends AbstractTableModel {
 
     private final List<Cliente> mLista;
 
-    public JTableModel(List<Cliente> mLista) {
+    public JTableModelCliente(List<Cliente> mLista) {
         this.mLista = mLista;
     }
 

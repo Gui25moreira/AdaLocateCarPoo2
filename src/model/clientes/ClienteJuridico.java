@@ -8,7 +8,7 @@ public class ClienteJuridico extends Cliente {
         return "Cliente{" +
                 "nome='" + getNome() + "'," +
                 '\'' +
-                "CNP='" + getIdentificador() + '\'' +
+                "CNPJ='" + getIdentificador() + '\'' +
                 '}';
     }
 }

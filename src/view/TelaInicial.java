@@ -1,6 +1,7 @@
 package view;
 
 import view.clientes.TelaInicialClientes;
+import view.veiculos.TelaInicialVeiculos;
 
 
 import javax.swing.*;
@@ -50,17 +51,17 @@ public class TelaInicial extends JFrame {
         segunda.setVisible(true);
 
     }
-//    protected void btnVehicleArea(ActionEvent ev){
-//
-//        TelaInicialVeiculos tela = new TelaInicialVeiculos();
-//        setVisible(false);
-//        this.setLocationRelativeTo(null);
-//        tela.setVisible(true);
-//
-//    }
+    protected void btnVehicleArea(ActionEvent ev){
+
+        TelaInicialVeiculos tela = new TelaInicialVeiculos();
+        setVisible(false);
+        this.setLocationRelativeTo(null);
+        tela.setVisible(true);
+
+    }
     private void eventos(){
         btnAreaClientes.addActionListener(this::btnClientArea);;
-//        btnAreaVeiculos.addActionListener(this::btnVehicleArea);;
+        btnAreaVeiculos.addActionListener(this::btnVehicleArea);;
     }
 
 

@@ -1,6 +1,6 @@
 package view.clientes;
 
-import view.services.ClienteService;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +12,7 @@ public class TelaInicialClientes extends JFrame {
     protected Integer larguraBtn = 150;
     protected Integer alturaBtn = 30;
     protected JPanel pnlClientes;
+    public String escolha;
 
     //Botões
 
@@ -42,8 +43,8 @@ public class TelaInicialClientes extends JFrame {
     }
 
     protected void btnCadastrarCliente(ActionEvent ev){
-
-        TelaCadastroCliente tela = new ClienteService();
+        escolha = "1";
+        TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
         setVisible(false);
         tela.setLocationRelativeTo(null);
         tela.setVisible(true);
@@ -51,11 +52,11 @@ public class TelaInicialClientes extends JFrame {
     }
 
     protected void btnConsultarClientes(ActionEvent ev){
-
-        TelaConsultarCliente tela = new TelaConsultarCliente();
-        setVisible(false);
-        tela.setLocationRelativeTo(null);
-        tela.setVisible(true);
+          escolha = "2";
+          TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+          setVisible(false);
+          tela.setLocationRelativeTo(null);
+          tela.setVisible(true);
 
     }
 
