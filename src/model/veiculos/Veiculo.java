@@ -2,12 +2,13 @@ package model.veiculos;
 
 import model.clientes.Cliente;
 import model.repositorys.Entidade;
+import model.sistema.Aluguel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 
-public class Veiculo implements Comparable, Serializable, Entidade{
+public class Veiculo implements Comparable, Serializable, Entidade {
 
     private String modelo;
     private String anoDeFabricacao;
@@ -17,6 +18,8 @@ public class Veiculo implements Comparable, Serializable, Entidade{
     private int valorAluguel;
     private boolean isAlugado;
     private Cliente cliente;
+    private Aluguel aluguel;
+
 
     public Veiculo() {
     }
@@ -27,14 +30,14 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         this.marca = marca;
         this.anoDeFabricacao = anoDeFabricacao;
         this.tipoDoVeiculo = tipoDoVeiculo;
-        this.isAlugado =false;
-        if(tipoDoVeiculo.equals("Pequeno")){
-            this.valorAluguel =  100;
-        }else if(tipoDoVeiculo.equals("Medio")){
+        this.isAlugado = false;
+        if (tipoDoVeiculo.equals("Pequeno")) {
+            this.valorAluguel = 100;
+        } else if (tipoDoVeiculo.equals("Medio")) {
             this.valorAluguel = 150;
-        }else if(tipoDoVeiculo.equals("SUV")){
-            this.valorAluguel =  200;
-    }else{
+        } else if (tipoDoVeiculo.equals("SUV")) {
+            this.valorAluguel = 200;
+        } else {
             System.out.println("Digite uma opção de veículo válida!");
         }
     }
@@ -72,9 +75,6 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         this.marca = marca;
     }
 
-    public String getPlaca() {
-        return placa;
-    }
 
     public void setPlaca(String placa) {
         this.placa = placa;
@@ -108,6 +108,14 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         return cliente;
     }
 
+    public Aluguel getAluguel() {
+        return aluguel;
+    }
+
+    public void setAluguel(Aluguel aluguel) {
+        this.aluguel = aluguel;
+    }
+
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
@@ -117,7 +125,6 @@ public class Veiculo implements Comparable, Serializable, Entidade{
                 "Modelo='" + getModelo() + "'," +
                 '\'' +
                 "Placa='" + getId() + '\'' +
-                "IsAlugado='" + isAlugado() + "'," +
                 '\'' +
                 '}';
     }

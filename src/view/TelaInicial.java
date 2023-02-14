@@ -9,14 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class TelaInicial extends JFrame {
-    protected JTextArea texto;
     protected Integer larguraBtn = 150;
     protected Integer alturaBtn = 30;
 
-    protected JPanel pnlForm;
-
     protected JPanel pnlInicial;
-    protected JPanel pnlBotaoSair;
     protected JButton btnAreaClientes;
     protected JButton btnAreaVeiculos;
     protected JButton btnSair;
@@ -28,7 +24,7 @@ public class TelaInicial extends JFrame {
 
     private void Incializar(){
         setLayout(null);
-        this.setTitle("Home Page - AdaLocateCar");
+        this.setTitle("AdaLocateCar");
         this.setSize(320,150);
         this.getContentPane().setLayout(new BorderLayout());
         this.setResizable(false);
@@ -37,41 +33,36 @@ public class TelaInicial extends JFrame {
         this.getContentPane().add(getPnlInicial());
 
     }
-    public JPanel getPnlForm(){
-        if(pnlForm==null){
-            pnlForm = new JPanel();
-        }
-        return pnlForm;
-    }
-    protected void btnClientArea(ActionEvent ev){
+    protected void areaDosClientes(ActionEvent ev){
 
-        TelaInicialClientes segunda = new TelaInicialClientes();
         setVisible(false);
-        this.setLocationRelativeTo(null);
-        segunda.setVisible(true);
+        TelaInicialClientes tela = new TelaInicialClientes();
+        tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
 
     }
-    protected void btnVehicleArea(ActionEvent ev){
+    protected void areaDosVeiculos(ActionEvent ev){
 
         TelaInicialVeiculos tela = new TelaInicialVeiculos();
         setVisible(false);
-        this.setLocationRelativeTo(null);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
 
     }
     private void eventos(){
-        btnAreaClientes.addActionListener(this::btnClientArea);;
-        btnAreaVeiculos.addActionListener(this::btnVehicleArea);;
+        btnAreaClientes.addActionListener(this::areaDosClientes);
+        btnAreaVeiculos.addActionListener(this::areaDosVeiculos);
+        btnSair.addActionListener(this::btnBotaoSair);
     }
 
 
     public JPanel getPnlInicial() {
-//        new FlowLayout(FlowLayout.CENTER)
+
         if (pnlInicial == null) {
             pnlInicial = new JPanel(new FlowLayout());
 
-            btnAreaClientes = new JButton("Client Area");
-            btnAreaVeiculos = new JButton(" Vehicle Area ");
+            btnAreaClientes = new JButton("Area do cliente");
+            btnAreaVeiculos = new JButton(" Área dos veículos");
             btnSair = new JButton("Sair");
             btnAreaClientes.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnAreaVeiculos.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
@@ -84,10 +75,9 @@ public class TelaInicial extends JFrame {
         return pnlInicial;
     }
 
-//    public JButton getPnlBotaoSair() {
-//
-//           btnSair = new JButton("Sair");
-//           btnSair.setLocation(400,300);
-//        return btnSair;
-//        }
+    protected void btnBotaoSair(ActionEvent ev) {
+        this.setVisible(false);
+        this.dispose();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
 }

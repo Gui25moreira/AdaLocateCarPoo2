@@ -1,7 +1,5 @@
 package model.clientes;
 
-import model.repositorys.Entidade;
-
 import java.io.Serializable;
 
 public class Endereco implements Serializable {

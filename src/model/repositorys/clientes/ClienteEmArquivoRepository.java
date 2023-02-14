@@ -5,6 +5,6 @@ import model.repositorys.RepositorioEmArquivoGenerico;
 
 public class ClienteEmArquivoRepository extends RepositorioEmArquivoGenerico<Cliente> {
     public ClienteEmArquivoRepository() {
-        super("dados_pessoa.txt");
+        super("dados_cliente.txt");
     }
 }

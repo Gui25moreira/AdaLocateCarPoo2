@@ -1,5 +1,6 @@
 package model.repositorys;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class RepositorioEmMemoriaGenerico<T extends Entidade> implements Reposit
     @Override
     public T salvar(T entidade) {
         if (existe(entidade)) {
+            JOptionPane.showMessageDialog(null, "Id já cadastrado!", "Confirmação", JOptionPane.WARNING_MESSAGE);
             throw new IllegalArgumentException("Já existe uma entidade com esse id cadastrado");
         }
         dados.add(entidade);
@@ -55,7 +57,7 @@ public class RepositorioEmMemoriaGenerico<T extends Entidade> implements Reposit
 
     @Override
     public T consultar(String id) {
-        for (T entidade: dados) {
+        for (T entidade : dados) {
             if (entidade.getId().equals(id)) {
                 return entidade;
             }

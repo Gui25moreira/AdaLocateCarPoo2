@@ -1,7 +1,5 @@
 package model.sistema;
 
-import model.clientes.Cliente;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +7,8 @@ import java.util.List;
 public class ManipuladorDeArquivo {
 
     public static <T> void escreverEmArquivo(List<T> dados, String arquivo) {
-        try(OutputStream fileOutputStream = new FileOutputStream(arquivo);
-            ObjectOutputStream escritor = new ObjectOutputStream(fileOutputStream)){
+        try (OutputStream fileOutputStream = new FileOutputStream(arquivo);
+             ObjectOutputStream escritor = new ObjectOutputStream(fileOutputStream)) {
             escritor.writeObject(dados);
             escritor.flush();
         } catch (IOException e) {

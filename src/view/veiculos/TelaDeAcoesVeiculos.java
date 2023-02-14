@@ -1,24 +1,23 @@
 package view.veiculos;
 
-import model.JTableModelCliente;
+
 import model.JTableModelVeiculo;
 import model.clientes.Cliente;
-import model.clientes.Contato;
-import model.clientes.Endereco;
 import model.repositorys.sistema.AlugueEmArquivoRepository;
+import model.repositorys.sistema.DevolucaoEmArquivoRepository;
 import model.repositorys.veiculos.VeiculoEmArquivoRepository;
 import model.sistema.Aluguel;
+import model.sistema.Devolucao;
 import model.veiculos.Veiculo;
 import view.clientes.TelaDeAcoesClientes;
 import view.services.GeraRodape;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -32,12 +31,16 @@ public class TelaDeAcoesVeiculos extends JFrame {
     protected JButton btnDeletar = new JButton("Deletar");
     protected JButton btnAlterar = new JButton("Alterar Veículo");
     protected JButton btnPesquisar = new JButton("Pesquisar");
+    protected JButton btnDevolver = new JButton("Devolver");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     protected VeiculoEmArquivoRepository repositorioDeVeiculos = new VeiculoEmArquivoRepository();
     protected AlugueEmArquivoRepository repositorioDeAlugueis = new AlugueEmArquivoRepository();
+    protected DevolucaoEmArquivoRepository repositorioDeDevolucoes = new DevolucaoEmArquivoRepository();
     Random gerador = new Random();
     protected JButton btnCadastro = new JButton("Cadastrar");
     protected JButton btnAlugar = new JButton("Alugar");
 
+    protected JTable jTable = new JTable();
     protected GeraRodape pnlRodape = new GeraRodape();
     protected Cliente cliente = new Cliente();
     protected JPanel pnlFormCadastroVeiculo;
@@ -51,8 +54,8 @@ public class TelaDeAcoesVeiculos extends JFrame {
     protected JTextField txtModelo;
 
 
-    JLabel lblNomeCliente = new JLabel("Cliente responsável!");
-    JTextField txtNomeCliente = new JTextField(tamanhoColunasTextField);
+    protected JLabel lblClienteResponsavel;
+    protected JTextField txtClienteResponsavel;
     protected JLabel lblMarca;
     protected JTextField txtMarca;
 
@@ -69,22 +72,41 @@ public class TelaDeAcoesVeiculos extends JFrame {
     protected JLabel lblValorDoAlguel;
     protected JTextField txtValorDoAluguel;
 
+    protected JLabel lblCliente;
+    protected JTextField txtCliente;
+
+    protected JLabel lblVeiculo;
+    protected JTextField txtVeiculo;
+
+    protected JLabel lblDataDoAluguel;
+    protected JTextField txtDataDoAluguel;
+
+    protected JLabel lblValorAPagar;
+    protected JTextField txtValorAPagar;
+
+    protected JLabel lblDataDeDevolucao;
+    protected JTextField txtDataDeDevolucao;
+
+    protected JPanel pnlFormDevolucao;
 
 
-
-    public TelaDeAcoesVeiculos(String escolha,Cliente clienteLogado) {
+    public TelaDeAcoesVeiculos(String escolha, Cliente clienteLogado) {
         this.escolha = escolha;
 
-        if(escolha.equals(("0"))){
+        if (escolha.equals(("0"))) {
             TelaInicialVeiculos tela = new TelaInicialVeiculos();
             tela.setVisible(true);
-    }else if(escolha.equals("1")) {
+        } else if (escolha.equals("1")) {
             incializarTelaCadastroDeVeiculo();
             this.eventos();
         } else if (escolha.equals("2")) {
             incializarTelaDeConsulta();
             this.eventos();
-        } else if (escolha.equals("10")) {
+        } else if (escolha.equals("3")) {
+            cliente = clienteLogado;
+            incializarTelaDeConsultaDevolucao();
+            this.eventos();
+        }else if (escolha.equals("10")) {
             cliente = clienteLogado;
             incializarTelaDeConsultaAluguel();
             this.eventos();
@@ -96,6 +118,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
         btnBotaoSair.addActionListener(this::btnBotaoSair);
         btnLimparCampos.addActionListener(this::btnLimparCampos);
         btnAlugar.addActionListener(this::setBtnAlugar);
+        btnDevolver.addActionListener(this::setBtnDevolver);
         btnVoltarTelaClientes.addActionListener(this::setBtnVoltarTelaClientes);
         btnVoltar.addActionListener(this::setBtnVoltar);
         btnAlterar.addActionListener(this::setBtnAlterar);
@@ -104,25 +127,22 @@ public class TelaDeAcoesVeiculos extends JFrame {
     }
 
 
-    protected void listarAlugueisEDevolucoes() {
-
-    }
-
     private void incializarTelaCadastroDeVeiculo() {
 
-        this.setLocationRelativeTo(null);
+
         this.setTitle("Cadastro - Veiculo");
         this.getContentPane().setLayout(new BorderLayout());
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         this.getContentPane().add(getPnlFormCadastroVeiculo(), BorderLayout.CENTER);
         this.getContentPane().add(pnlRodape.getPnlRodapeComum(btnCadastro, btnBotaoSair, btnVoltar, btnLimparCampos), BorderLayout.PAGE_END);
         this.pack();
+
     }
 
     private void incializarTelaDeConsulta() {
+
         List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos();
         JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
         JTable jTable = new JTable(meuTable);
@@ -146,25 +166,25 @@ public class TelaDeAcoesVeiculos extends JFrame {
 
         List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos().stream().filter(v -> !v.isAlugado()).collect(Collectors.toList());
         JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
-        JTable jTable = new JTable(meuTable);
+        jTable = new JTable(meuTable);
         JScrollPane scrollPane = new JScrollPane(jTable);
         pnlForm = getPnlFormAlugarVeiculo();
         this.setTitle("Tela de consulta Veiculos");
-        if(jTable.getRowCount() == 0){
+        if (jTable.getRowCount() == 0) {
             JTextField texto = new JTextField("Não existem veículos disponíveis!");
             this.getContentPane().add(texto, BorderLayout.LINE_START);
             this.getContentPane().add(pnlForm, BorderLayout.CENTER);
-            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar,btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
             setarValoresCampos(jTable);
             this.setVisible(true);
             this.setResizable(false);
             this.setLocationRelativeTo(null);
             this.pack();
             this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        }else {
+        } else {
             this.getContentPane().add(scrollPane, BorderLayout.LINE_START);
             this.getContentPane().add(pnlForm, BorderLayout.CENTER);
-            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar,btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
             setarValoresCampos(jTable);
             this.setVisible(true);
             this.setResizable(false);
@@ -173,6 +193,40 @@ public class TelaDeAcoesVeiculos extends JFrame {
             this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
     }
+
+    private void incializarTelaDeConsultaDevolucao() {
+
+        List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos().stream().filter(v -> cliente.getNome().equals(v.getCliente().getNome())).collect(Collectors.toList());
+
+        JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
+        jTable = new JTable(meuTable);
+        JScrollPane scrollPane = new JScrollPane(jTable);
+
+        if (veiculos.size() == 0) {
+            JTextField texto = new JTextField("Não há veículos alugados pelo cliente logado!");
+            this.getContentPane().add(texto, BorderLayout.LINE_START);
+            this.getContentPane().add(getPnlFormDevolucao(), BorderLayout.CENTER);
+            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+            setarValoresCamposDevolucao(jTable);
+            this.setVisible(true);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.pack();
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        } else {
+            this.getContentPane().add(scrollPane, BorderLayout.LINE_START);
+            this.getContentPane().add(getPnlFormDevolucao(), BorderLayout.CENTER);
+            this.getContentPane().add(pnlRodape.getPnlRodapeDevolverVeiculo(btnDevolver, btnVoltar, btnBotaoSair), BorderLayout.PAGE_END);
+            setarValoresCamposDevolucao(jTable);
+            this.setVisible(true);
+            this.setResizable(false);
+            this.setLocationRelativeTo(null);
+            this.pack();
+            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+
+    }
+
 
     public JPanel getPnlFormCadastroVeiculo() {
 
@@ -212,10 +266,10 @@ public class TelaDeAcoesVeiculos extends JFrame {
             pnlFormCadastroVeiculo.add(txtAnoDeFabricacao);
 
 
-
         }
         return pnlFormCadastroVeiculo;
     }
+
     public JPanel getPnlFormConsultaVeiculo() {
 
         if (pnlFormCadastroVeiculo == null) {
@@ -256,7 +310,6 @@ public class TelaDeAcoesVeiculos extends JFrame {
             pnlFormCadastroVeiculo.add(txtAnoDeFabricacao);
 
 
-
         }
         return pnlFormCadastroVeiculo;
     }
@@ -290,7 +343,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
 
             lblValorDoAlguel = new JLabel("Valor do Aluguel");
             txtValorDoAluguel = new JTextField(tamanhoColunasTextField);
-            txtValorDoAluguel .setEditable(false);
+            txtValorDoAluguel.setEditable(false);
 
             pnlFormAlugarVeicuo.add(lblMarca);
             pnlFormAlugarVeicuo.add(txtMarca);
@@ -314,6 +367,42 @@ public class TelaDeAcoesVeiculos extends JFrame {
         return pnlFormAlugarVeicuo;
     }
 
+    public JPanel getPnlFormDevolucao() {
+
+        if (pnlFormDevolucao == null) {
+
+            pnlFormDevolucao = new JPanel();
+            pnlFormDevolucao.setLayout(new GridLayout(5, 1, 20, 15));
+
+            lblClienteResponsavel = new JLabel("Cliente responsável:");
+            txtClienteResponsavel = new JTextField(tamanhoColunasTextField);
+
+            lblVeiculo = new JLabel("Veículo alugado:");
+            txtVeiculo = new JTextField(tamanhoColunasTextField);
+
+            lblDataDoAluguel = new JLabel("Data do aluguel:");
+            txtDataDoAluguel = new JTextField(tamanhoColunasTextField);
+
+            lblPlaca = new JLabel("Placa do veículo");
+            txtPlaca = new JTextField(tamanhoColunasTextField);
+
+            pnlFormDevolucao.add(lblClienteResponsavel);
+            pnlFormDevolucao.add(txtClienteResponsavel);
+
+            pnlFormDevolucao.add(lblVeiculo);
+            pnlFormDevolucao.add(txtVeiculo);
+
+            pnlFormDevolucao.add(lblDataDoAluguel);
+            pnlFormDevolucao.add(txtDataDoAluguel);
+
+            pnlFormDevolucao.add(lblPlaca);
+            pnlFormDevolucao.add(txtPlaca);
+
+
+        }
+        return pnlFormDevolucao;
+    }
+
     protected void btnCadastrarVeiculo(ActionEvent ev) {
         escolha = "1";
         String marca = txtMarca.getText();
@@ -327,9 +416,9 @@ public class TelaDeAcoesVeiculos extends JFrame {
 
         JOptionPane.showMessageDialog(null, "Veiculo cadastrado com sucesso", "Confirmação", JOptionPane.WARNING_MESSAGE);
         setVisible(false);
-        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
-        this.setLocationRelativeTo(null);
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
     }
 
     protected void btnLimparCampos(ActionEvent ev) {
@@ -347,35 +436,58 @@ public class TelaDeAcoesVeiculos extends JFrame {
         this.dispose();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-    protected void setBtnVoltar(ActionEvent ev){
+
+    protected void setBtnVoltar(ActionEvent ev) {
         escolha = "0";
         this.setVisible(false);
         this.dispose();
-        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
+        tela.setLocationRelativeTo(null);
     }
-    protected void setBtnVoltarTelaClientes(ActionEvent ev){
+
+    protected void setBtnVoltarTelaClientes(ActionEvent ev) {
         escolha = "0";
         this.setVisible(false);
         this.dispose();
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+        tela.setLocationRelativeTo(null);
     }
 
     public void setBtnAlugar(ActionEvent ev) {
 
         escolha = "10";
-        System.out.println("Alugou");
+        JOptionPane.showMessageDialog(null, "Veiculo Alugado com sucesso", "Confirmação", JOptionPane.WARNING_MESSAGE);
         String placa = txtPlaca.getText();
         Veiculo veiculo = repositorioDeVeiculos.consultar(placa);
         veiculo.setAlugado(true);
         veiculo.setCliente(cliente);
+        Aluguel aluguel = new Aluguel(veiculo, cliente);
+        veiculo.setAluguel(aluguel);
         repositorioDeVeiculos.atualizar(veiculo);
-        Aluguel aluguel = new Aluguel(veiculo,cliente);
         repositorioDeAlugueis.salvar(aluguel);
+        this.setVisible(false);
+        this.dispose();
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
+        tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
+    }
+
+    protected void setBtnDevolver(ActionEvent ev) {
+        escolha = "3";
+        Veiculo veiculo = repositorioDeVeiculos.consultar(txtPlaca.getText());
+        String idAluguel = txtDataDoAluguel.getText();
+        Aluguel aluguel = (Aluguel) repositorioDeAlugueis.consultar(idAluguel);
+        Devolucao devolucao = new Devolucao(veiculo,cliente,aluguel);
+        veiculo.setAlugado(false);
+        veiculo.setCliente(null);
+        repositorioDeVeiculos.atualizar(veiculo);
+        String valorAPagar = devolucao.getValorAPagar().toString();
+        JOptionPane.showMessageDialog(null, "Veiculo Devolvido com sucesso!", "Confirmação", JOptionPane.WARNING_MESSAGE);
         this.setVisible(false);
         this.dispose();
         TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
         tela.setVisible(true);
-
+        tela.setLocationRelativeTo(null);
     }
 
 
@@ -398,6 +510,25 @@ public class TelaDeAcoesVeiculos extends JFrame {
         });
 
     }
+
+    public void setarValoresCamposDevolucao(JTable table) {
+
+        table.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (table.getSelectedRow() != -1) {
+                    String placa = table.getValueAt(table.getSelectedRow(), 1).toString();
+                    Veiculo veiculo = repositorioDeVeiculos.consultar(placa);
+                    txtVeiculo.setText(veiculo.getModelo());
+                    txtPlaca.setText(veiculo.getId());
+                    txtClienteResponsavel.setText(veiculo.getCliente().getNome());
+                    txtDataDoAluguel.setText(veiculo.getAluguel().getData().toString());
+                    txtDataDeDevolucao.setText(LocalDateTime.now().toString());
+                }
+            }
+        });
+
+    }
+
     protected void setBtnAlterar(ActionEvent ev) {
         escolha = "2";
         String placa = txtPlaca.getText();
@@ -409,9 +540,11 @@ public class TelaDeAcoesVeiculos extends JFrame {
         JOptionPane.showMessageDialog(null, "Veiculo alterado com sucesso!", "Confirmação", JOptionPane.WARNING_MESSAGE);
         this.setVisible(false);
         this.dispose();
-        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
     }
+
     protected void setBtnDeletar(ActionEvent ev) {
         escolha = "2";
         String placa = txtPlaca.getText();
@@ -419,28 +552,60 @@ public class TelaDeAcoesVeiculos extends JFrame {
         JOptionPane.showMessageDialog(null, "Veiculo deletado com sucesso!", "Confirmação", JOptionPane.WARNING_MESSAGE);
         this.setVisible(false);
         this.dispose();
-        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
 
     }
-    protected void setBtnPesquisar(ActionEvent ev){
-        List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos();
-        JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
-        JTable jTable = new JTable(meuTable);
+
+    protected void setBtnPesquisar(ActionEvent ev) {
+        escolha = "10";
+        System.out.println(jTable.getRowCount());
+        this.setVisible(false);
+        this.dispose();
         String pesquisarNome = JOptionPane.showInputDialog("Digite um nome para pesquisar!");
-        if(pesquisarNome.length()>0){
-            for(int i=0;i<jTable.getRowCount();i++){
-                if(pesquisarNome.equals(jTable.getValueAt(i,0))){
-                    String placa = jTable.getValueAt(jTable.getSelectedRow(), 1).toString();
-                    Veiculo veiculo = repositorioDeVeiculos.consultar(placa);
-                    txtModelo.setText(veiculo.getModelo());
-                    txtPlaca.setText(veiculo.getId());
-                    txtMarca.setText(veiculo.getMarca());
-                    txtTipoDeVeiculo.setText(veiculo.getTipoDoVeiculo());
-                    txtAnoDeFabricacao.setText(veiculo.getAnoDeFabricacao());
-                    txtValorDoAluguel.setText(String.valueOf(veiculo.getValorAluguel()));
-                }
+        this.setVisible(false);
+        this.dispose();
+
+        if (pesquisarNome.length() > 0) {
+            List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos().stream().filter(v -> v.getModelo().equals(pesquisarNome)).collect(Collectors.toList());
+            JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
+            jTable = new JTable(meuTable);
+            JScrollPane scrollPane = new JScrollPane(jTable);
+            this.setVisible(false);
+
+            pnlForm = getPnlFormAlugarVeiculo();
+            this.setTitle("Tela de consulta Veiculos");
+            this.setVisible(false);
+
+            if (jTable.getRowCount() == 0) {
+                JTextField texto = new JTextField("Não existem veículos com esse nome");
+                this.getContentPane().add(texto, BorderLayout.LINE_START);
+                this.getContentPane().add(pnlForm, BorderLayout.CENTER);
+                this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+                setarValoresCampos(jTable);
+                this.setVisible(true);
+                this.setResizable(false);
+                this.setLocationRelativeTo(null);
+                this.pack();
+                this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            } else {
+
+                this.getContentPane().add(scrollPane, BorderLayout.LINE_START);
+                this.getContentPane().add(pnlForm, BorderLayout.CENTER);
+                this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+                setarValoresCampos(jTable);
+                this.setVisible(true);
+                this.setResizable(false);
+                this.setLocationRelativeTo(null);
+                this.pack();
+                this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             }
+        } else {
+            TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
+            tela.setVisible(true);
+            tela.setLocationRelativeTo(null);
         }
     }
 }
+

@@ -1,13 +1,12 @@
 package model.clientes;
 
-import java.util.Date;
-
-public class ClienteFisico extends Cliente{
+public class ClienteFisico extends Cliente {
     private String dataDeNascimento;
     private String idade;
 
-    public ClienteFisico(String nome, String identificador, String senha,Endereco endereco,Contato contato) {
-        super(nome, identificador,senha,endereco,contato);
+    public ClienteFisico(String nome, String identificador, String dataDeNascimento, String senha, Endereco endereco, Contato contato) {
+        super(nome, identificador, senha, endereco, contato);
+        this.dataDeNascimento = dataDeNascimento;
     }
 
     public String getIdade() {

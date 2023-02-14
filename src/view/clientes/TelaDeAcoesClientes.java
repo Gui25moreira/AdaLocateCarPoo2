@@ -1,12 +1,10 @@
 package view.clientes;
 
 import model.JTableModelCliente;
-import model.JTableModelVeiculo;
+
 import model.clientes.*;
 import model.repositorys.clientes.ClienteEmArquivoRepository;
-import model.repositorys.veiculos.VeiculoEmArquivoRepository;
-import model.veiculos.Veiculo;
-import view.TelaInicial;
+
 import view.services.GeraRodape;
 import view.veiculos.TelaDeAcoesVeiculos;
 
@@ -15,20 +13,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 
-public class TelaDeAcoesClientes extends JFrame{
+public class TelaDeAcoesClientes extends JFrame {
     public String escolha;
+    protected GeraRodape pnlRodape = new GeraRodape();
+    protected ClienteEmArquivoRepository repositorioDeClientes = new ClienteEmArquivoRepository();
+
+    //Botões
     protected JButton btnBotaoSair = new JButton("Sair");
     protected JButton btnVoltar = new JButton("Voltar");
     protected JButton btnLimparCampos = new JButton("Limpar campos");
     protected JButton btnDeletar = new JButton("Deletar");
-    protected JButton btnAlterar= new JButton("Alterar");
-    protected ClienteEmArquivoRepository repositorioDeClientes = new ClienteEmArquivoRepository();
+    protected JButton btnAlterar = new JButton("Alterar");
+
     protected JButton btnCadastro = new JButton("Cadastrar");
     protected JButton btnAlugar = new JButton("Alugar");
-    protected JButton btnLogin  = new JButton("Login");
+    protected JButton btnDevolver = new JButton("Devolver");
+    protected JButton btnLoginAluguel = new JButton("Login");
+    protected JButton btnLoginDevolucao = new JButton("Login");
 
-    protected GeraRodape pnlRodape = new GeraRodape();
-
+    //Campos de texto
     protected int tamanhoColunasTextField = 20;
     protected JLabel lblNome;
     protected JTextField txtNome;
@@ -60,36 +63,39 @@ public class TelaDeAcoesClientes extends JFrame{
     protected JLabel lblEmail;
     protected JTextField txtEmail;
 
-
-    protected JPanel pnlFormCadastroCliente;
+    //Paineis
     protected JPanel pnlFormLogin;
+    protected JPanel pnlFormCadastroCliente;
 
     protected JPanel pnlForm = new JPanel();
 
-    public TelaDeAcoesClientes (String escolha){
+    public TelaDeAcoesClientes(String escolha) {
         this.escolha = escolha;
-        if (escolha.equals("0")){
+        if (escolha.equals("0")) {
             TelaInicialClientes tela = new TelaInicialClientes();
             tela.setVisible(true);
-        }
-        else if (escolha.equals("1")){
+        } else if (escolha.equals("1")) {
             incializarTelaCadastroDeClientes();
             this.eventos();
 
-        }else if (escolha.equals("2")){
+        } else if (escolha.equals("2")) {
             incializarTelaDeConsulta();
             this.eventos();
-        }else if (escolha.equals("3")){
+        } else if (escolha.equals("3")) {
             inicializarTelaDeAluguel();
             this.eventos();
+        } else if (escolha.equals("4")) {
+            inicializarTelaDeLogin();
+            this.eventos();
         }
-
     }
 
-    private void eventos(){
+
+    private void eventos() {
         btnCadastro.addActionListener(this::btnCadastrarCliente);
         btnAlugar.addActionListener(this::btnAlugar);
-        btnLogin.addActionListener(this::btnLogin);
+        btnLoginAluguel.addActionListener(this::btnLoginAluguel);
+        btnLoginDevolucao.addActionListener(this::btnLoginDevolucao);
         btnBotaoSair.addActionListener(this::btnBotaoSair);
         btnVoltar.addActionListener(this::btnVoltar);
         btnLimparCampos.addActionListener(this::btnLimparCampos);
@@ -97,7 +103,7 @@ public class TelaDeAcoesClientes extends JFrame{
         btnDeletar.addActionListener(this::setBtnDeletar);
     }
 
-    private void incializarTelaDeConsulta(){
+    private void incializarTelaDeConsulta() {
 
         List<Cliente> clientes = repositorioDeClientes.listarTodos();
         JTableModelCliente meuTable = new JTableModelCliente(clientes);
@@ -107,7 +113,7 @@ public class TelaDeAcoesClientes extends JFrame{
         this.setTitle("Tela de consulta Clientes");
         this.getContentPane().add(scrollPane, BorderLayout.LINE_START);
         this.getContentPane().add(pnlForm, BorderLayout.CENTER);
-        this.getContentPane().add(pnlRodape.getPnlRodapeManipularEntidade( btnAlterar,  btnDeletar,  btnLimparCampos, btnBotaoSair, btnVoltar), BorderLayout.PAGE_END);
+        this.getContentPane().add(pnlRodape.getPnlRodapeManipularEntidade(btnAlterar, btnDeletar, btnLimparCampos, btnBotaoSair, btnVoltar), BorderLayout.PAGE_END);
         setarValoresCampos(jTable);
         this.setVisible(true);
         this.setResizable(false);
@@ -115,6 +121,7 @@ public class TelaDeAcoesClientes extends JFrame{
         this.pack();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
+
     private void incializarTelaCadastroDeClientes() {
 
         this.setLocationRelativeTo(null);
@@ -124,10 +131,11 @@ public class TelaDeAcoesClientes extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.getContentPane().add(getPnlFormCadastroCliente(), BorderLayout.CENTER);
-        this.getContentPane().add(pnlRodape.getPnlRodapeComum(btnCadastro, btnBotaoSair,btnVoltar, btnLimparCampos), BorderLayout.PAGE_END);
+        this.getContentPane().add(pnlRodape.getPnlRodapeComum(btnCadastro, btnBotaoSair, btnVoltar, btnLimparCampos), BorderLayout.PAGE_END);
         this.pack();
     }
-    private void inicializarTelaDeAluguel(){
+
+    private void inicializarTelaDeAluguel() {
 
 
         this.setTitle("Aluguel Veiculo");
@@ -136,14 +144,27 @@ public class TelaDeAcoesClientes extends JFrame{
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.getContentPane().add(getPnlFormLogin(), BorderLayout.CENTER);
-        this.getContentPane().add(pnlRodape.getPnlRodapeLogin(btnLogin,btnVoltar), BorderLayout.PAGE_END);
+        this.getContentPane().add(pnlRodape.getPnlRodapeLogin(btnLoginAluguel, btnVoltar), BorderLayout.PAGE_END);
         this.pack();
 
 
     }
 
-    private JPanel getPnlFormLogin(){
-        if(pnlFormLogin == null){
+    private void inicializarTelaDeLogin() {
+
+        this.setTitle("Devolução Veiculo");
+        this.getContentPane().setLayout(new BorderLayout());
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.getContentPane().add(getPnlFormLogin(), BorderLayout.CENTER);
+        this.getContentPane().add(pnlRodape.getPnlRodapeLogin(btnLoginDevolucao, btnVoltar), BorderLayout.PAGE_END);
+        this.pack();
+
+    }
+
+    private JPanel getPnlFormLogin() {
+        if (pnlFormLogin == null) {
 
             pnlFormLogin = new JPanel();
             pnlFormLogin.setLayout(new GridLayout(2, 1, 20, 15));
@@ -242,6 +263,7 @@ public class TelaDeAcoesClientes extends JFrame{
         }
         return pnlFormCadastroCliente;
     }
+
     public JPanel getPnlFormConsultaCliente() {
 
         if (pnlFormCadastroCliente == null) {
@@ -280,6 +302,8 @@ public class TelaDeAcoesClientes extends JFrame{
             lblEmail = new JLabel("E-mail");
             txtEmail = new JTextField(tamanhoColunasTextField);
 
+            tipoDeCliente = new JCheckBox("Cliente Jurídico");
+
             pnlFormCadastroCliente.add(tipoDeCliente);
             pnlFormCadastroCliente.add(new JLabel(""));
 
@@ -317,10 +341,11 @@ public class TelaDeAcoesClientes extends JFrame{
         }
         return pnlFormCadastroCliente;
     }
-    public void setarValoresCampos(JTable table){
+
+    public void setarValoresCampos(JTable table) {
         table.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                if(table.getSelectedRow() !=-1) {
+            public void mouseClicked(MouseEvent e) {
+                if (table.getSelectedRow() != -1) {
                     String cpf = table.getValueAt(table.getSelectedRow(), 1).toString();
                     Cliente cliente = repositorioDeClientes.consultar(cpf);
                     Endereco endereco = cliente.getEndereco();
@@ -341,6 +366,7 @@ public class TelaDeAcoesClientes extends JFrame{
         });
 
     }
+
     protected void btnLimparCampos(ActionEvent ev) {
 
         tipoDeCliente.setVisible(false);
@@ -356,76 +382,105 @@ public class TelaDeAcoesClientes extends JFrame{
         txtEmail.setText("");
 
     }
-    protected void btnBotaoSair(ActionEvent ev){
+
+    protected void btnBotaoSair(ActionEvent ev) {
         this.setVisible(false);
         this.dispose();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-    protected void btnCadastrarCliente(ActionEvent ev){
-        escolha = "1";
 
+    protected void btnCadastrarCliente(ActionEvent ev) {
+        escolha = "1";
         String cpf = txtCpf.getText();
         String nome = txtNome.getText();
         String senha = txtSenha.getText();
-        Endereco endereco = new Endereco(txtRua.getText(),txtBairro.getText(),txtNumero.getText(),txtEstado.getText());
-        Contato contato = new Contato(txtNumeroDeTelefone.getText(),txtEmail.getText());
+        String dataDeNascimento = txtDataDeNascimento.getText();
+        Endereco endereco = new Endereco(txtRua.getText(), txtBairro.getText(), txtNumero.getText(), txtEstado.getText());
+        Contato contato = new Contato(txtNumeroDeTelefone.getText(), txtEmail.getText());
 
-        if (tipoDeCliente.isSelected()){
-            ClienteJuridico cliente = new ClienteJuridico(nome,cpf,senha,endereco,contato);
-            repositorioDeClientes.salvar(cliente);
-        }else {
-            ClienteFisico cliente = new ClienteFisico(nome,cpf,senha,endereco,contato);
-            repositorioDeClientes.salvar(cliente);
+        if(txtCpf.getText().length() != 0){
+                    if (tipoDeCliente.isSelected()) {
+                        ClienteJuridico cliente = new ClienteJuridico(nome, cpf, senha, endereco, contato);
+                        repositorioDeClientes.salvar(cliente);
+                    } else {
+                        ClienteFisico cliente = new ClienteFisico(nome, cpf, dataDeNascimento, senha, endereco, contato);
+                        repositorioDeClientes.salvar(cliente);
+                    }
+                    JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso", "Confirmação", JOptionPane.WARNING_MESSAGE);
+            } else{
+            JOptionPane.showMessageDialog(null, "Id precisa ser preenchido!", "Confirmação", JOptionPane.WARNING_MESSAGE);
         }
 
-        JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso", "Confirmação", JOptionPane.WARNING_MESSAGE);
         setVisible(false);
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
-        this.setLocationRelativeTo(null);
         tela.setVisible(true);
-
+        tela.setLocationRelativeTo(null);
     }
-    protected void btnVoltar(ActionEvent ev){
+
+    protected void btnVoltar(ActionEvent ev) {
         this.setVisible(false);
         this.dispose();
         TelaInicialClientes tela = new TelaInicialClientes();
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
     }
-    protected void btnAlugar(ActionEvent ev){
+
+    protected void btnAlugar(ActionEvent ev) {
         escolha = "3";
         this.setVisible(false);
         this.dispose();
     }
-    protected void btnDevolver(ActionEvent ev){
 
-    }
-    protected boolean verificaCliente(String cpf, String senha){
+    protected boolean verificaCliente(String cpf, String senha) {
         String cpfTeste = repositorioDeClientes.consultar(cpf).getId();
-        if(cpf.equals(cpfTeste)){
+        if (cpf.equals(cpfTeste)) {
             Cliente cliente = repositorioDeClientes.consultar(cpf);
-                if(cliente.getSenha().equals(senha)){
-                    JOptionPane.showMessageDialog(null, "Login Realizado com sucesso.", "Confirmação", JOptionPane.WARNING_MESSAGE);
-                    return true;
-                }
+            if (cliente.getSenha().equals(senha)) {
+                JOptionPane.showMessageDialog(null, "Login Realizado com sucesso.", "Confirmação", JOptionPane.WARNING_MESSAGE);
+                return true;
+            }
         }
-            return false;
+        return false;
     }
-    protected void btnLogin(ActionEvent ev){
+
+    protected void btnLoginAluguel(ActionEvent ev) {
 
         String cpf = txtCpf.getText();
         String senha = txtSenha.getText();
         Cliente cliente = repositorioDeClientes.consultar(cpf);
-        if(verificaCliente(cpf,senha)){
+        if (verificaCliente(cpf, senha)) {
             escolha = "10";
             this.setVisible(false);
             this.dispose();
-            TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
+            TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
             tela.setVisible(true);
-        }else{
-            System.out.println("Identificador ou senha inválido!");
+            tela.setLocationRelativeTo(null);
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado!", "Alerta", JOptionPane.WARNING_MESSAGE);
+
         }
 
     }
+
+    protected void btnLoginDevolucao(ActionEvent ev) {
+
+        String cpf = txtCpf.getText();
+        String senha = txtSenha.getText();
+        Cliente cliente = repositorioDeClientes.consultar(cpf);
+        if (verificaCliente(cpf, senha)) {
+            escolha = "3";
+            this.setVisible(false);
+            this.dispose();
+            TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
+            tela.setVisible(true);
+            tela.setLocationRelativeTo(null);
+
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado!", "Alerta", JOptionPane.WARNING_MESSAGE);
+        }
+
+    }
+
     protected void setBtnAlterar(ActionEvent ev) {
         escolha = "2";
         String cpf = txtCpf.getText();
@@ -449,6 +504,7 @@ public class TelaDeAcoesClientes extends JFrame{
         this.dispose();
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
     }
 
     protected void setBtnDeletar(ActionEvent ev) {
@@ -460,12 +516,14 @@ public class TelaDeAcoesClientes extends JFrame{
         this.dispose();
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
         tela.setVisible(true);
+        tela.setLocationRelativeTo(null);
     }
+
     private class CheckBoxHandler implements ItemListener {
         public void itemStateChanged(ItemEvent e) {
-            if(tipoDeCliente.isSelected()){
+            if (tipoDeCliente.isSelected()) {
                 txtDataDeNascimento.setEditable(false);
-            }else{
+            } else {
                 txtDataDeNascimento.setEditable(true);
             }
         }

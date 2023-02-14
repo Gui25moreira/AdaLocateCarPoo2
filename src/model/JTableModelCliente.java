@@ -20,7 +20,7 @@ public class JTableModelCliente extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        if(null == mLista){
+        if (null == mLista) {
             return 0;
         }
         return mLista.size();
@@ -33,7 +33,7 @@ public class JTableModelCliente extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex){
+        switch (columnIndex) {
             case 0:
                 return mLista.get(rowIndex).getNome();
             case 1:
@@ -43,20 +43,20 @@ public class JTableModelCliente extends AbstractTableModel {
         }
     }
 
-    public String getColumnName(int indice){
+    public String getColumnName(int indice) {
         return nomesColunas[indice];
     }
 
-    public Class getColClass(int coluna){
-        switch (coluna){
-            case 0,1:
+    public Class getColClass(int coluna) {
+        switch (coluna) {
+            case 0, 1:
                 return String.class;
             default:
                 return null;
         }
     }
 
-    public Cliente getCliente(int linha){
+    public Cliente getCliente(int linha) {
         Cliente clienteLinha = new Cliente();
         clienteLinha.setNome(mLista.get(linha).getNome());
         clienteLinha.setIdentificador(mLista.get(linha).getId());

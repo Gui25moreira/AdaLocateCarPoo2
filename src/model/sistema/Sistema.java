@@ -6,7 +6,6 @@ import model.veiculos.Veiculo;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Sistema implements Comparable, Serializable, Entidade{
 

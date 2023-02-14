@@ -1,14 +1,11 @@
 package view.clientes;
 
-
-
 import view.TelaInicial;
 import view.services.GeraRodape;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 
 public class TelaInicialClientes extends JFrame {
 
@@ -20,7 +17,7 @@ public class TelaInicialClientes extends JFrame {
     //Botões
 
     protected JButton btnCadastrarCliente;
-    protected JButton btnConsultarVeiculo;
+
     protected JButton btnConsultarClientes;
 
     protected JButton btnDevolverVeiculo;
@@ -31,23 +28,26 @@ public class TelaInicialClientes extends JFrame {
     protected GeraRodape pnlRodape = new GeraRodape();
 
 
-    public TelaInicialClientes(){
+    public TelaInicialClientes() {
         this.incializar();
         this.eventos();
     }
-    private void incializar(){
+
+    private void incializar() {
+        this.setLocationRelativeTo(null);
         setLayout(null);
         this.setTitle("Tela de Inicio - AdaLocateCar");
         this.getContentPane().setLayout(new BorderLayout());
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.getContentPane().add(getPnlClientes(),BorderLayout.CENTER);
-        this.getContentPane().add(pnlRodape.getPnlRodapeTelaInicial(btnBotaoSair,btnVoltar),BorderLayout.PAGE_END);
+        this.getContentPane().add(getPnlClientes(), BorderLayout.CENTER);
+        this.getContentPane().add(pnlRodape.getPnlRodapeTelaInicial(btnBotaoSair, btnVoltar), BorderLayout.PAGE_END);
         this.pack();
+        this.setLocationRelativeTo(null);
     }
 
-    protected void btnCadastrarCliente(ActionEvent ev){
+    protected void btnCadastrarCliente(ActionEvent ev) {
         escolha = "1";
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
         setVisible(false);
@@ -56,15 +56,16 @@ public class TelaInicialClientes extends JFrame {
 
     }
 
-    protected void btnConsultarClientes(ActionEvent ev){
-          escolha = "2";
-          TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
-          setVisible(false);
-          tela.setLocationRelativeTo(null);
-          tela.setVisible(true);
+    protected void btnConsultarClientes(ActionEvent ev) {
+        escolha = "2";
+        TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+        setVisible(false);
+        tela.setLocationRelativeTo(null);
+        tela.setVisible(true);
 
     }
-    protected void btnAlugarVeiculo(ActionEvent ev){
+
+    protected void btnAlugarVeiculo(ActionEvent ev) {
         escolha = "3";
         TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
         setVisible(false);
@@ -72,33 +73,41 @@ public class TelaInicialClientes extends JFrame {
         tela.setVisible(true);
     }
 
-    private void eventos(){
+    protected void btnDevolverVeiculo(ActionEvent ev) {
+
+        escolha = "4";
+        this.setVisible(false);
+        this.dispose();
+        TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+        tela.setVisible(true);
+
+    }
+
+    private void eventos() {
         btnCadastrarCliente.addActionListener(this::btnCadastrarCliente);
         btnConsultarClientes.addActionListener(this::btnConsultarClientes);
         btnAlugarVeiculo.addActionListener(this::btnAlugarVeiculo);
+        btnDevolverVeiculo.addActionListener(this::btnDevolverVeiculo);
         btnVoltar.addActionListener(this::btnVoltar);
         btnBotaoSair.addActionListener(this::btnBotaoSair);
     }
 
 
-
-    public JPanel getPnlClientes(){
+    public JPanel getPnlClientes() {
 //        new FlowLayout(FlowLayout.CENTER)
-        if(pnlClientes ==null){
+        if (pnlClientes == null) {
             pnlClientes = new JPanel();
-            pnlClientes.setLayout(new GridLayout(5,1, 15,15));
+            pnlClientes.setLayout(new GridLayout(4, 1, 15, 15));
 
             btnCadastrarCliente = new JButton("Cadastrar Cliente");
             btnConsultarClientes = new JButton("Consultar Cliente");
 
-            btnConsultarVeiculo = new JButton("Consultar Veículo");
             btnAlugarVeiculo = new JButton("Alugar Veículo");
             btnDevolverVeiculo = new JButton("Devolver Veículo");
 
             btnCadastrarCliente.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnConsultarClientes.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
 
-            btnConsultarVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnAlugarVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnDevolverVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
 
@@ -106,19 +115,20 @@ public class TelaInicialClientes extends JFrame {
             pnlClientes.add(btnConsultarClientes);
 
 
-            pnlClientes.add(btnConsultarVeiculo);
             pnlClientes.add(btnAlugarVeiculo);
             pnlClientes.add(btnDevolverVeiculo);
 
         }
         return pnlClientes;
     }
-    protected void btnBotaoSair(ActionEvent ev){
+
+    protected void btnBotaoSair(ActionEvent ev) {
         this.setVisible(false);
         this.dispose();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
-    protected void btnVoltar(ActionEvent ev){
+
+    protected void btnVoltar(ActionEvent ev) {
         this.setVisible(false);
         this.dispose();
         TelaInicial tela = new TelaInicial();

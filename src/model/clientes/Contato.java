@@ -1,10 +1,8 @@
 package model.clientes;
 
-import model.repositorys.Entidade;
-
 import java.io.Serializable;
 
-public class Contato implements Serializable{
+public class Contato implements Serializable {
     private String telefone;
     private String email;
 

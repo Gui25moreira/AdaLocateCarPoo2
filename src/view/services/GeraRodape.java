@@ -12,16 +12,18 @@ public class GeraRodape {
     protected JButton btnVoltar;
     protected JButton btnAlugar;
     protected JButton btnDeletar;
+    protected JButton btnDevolver;
     protected JButton btnPesquisar;
 
     protected JButton btnAtualizar;
     protected JButton btnLogin;
     protected JPanel pnlRodape;
 
-    public GeraRodape(){
+    public GeraRodape() {
 
     }
-    public JPanel getPnlRodapeComum(JButton btnCadastro, JButton btnBotaoSair,JButton btnVoltar, JButton btnLimparCampos){
+
+    public JPanel getPnlRodapeComum(JButton btnCadastro, JButton btnBotaoSair, JButton btnVoltar, JButton btnLimparCampos) {
 
         if (pnlRodape == null) {
 
@@ -36,7 +38,8 @@ public class GeraRodape {
         }
         return pnlRodape;
     }
-    public JPanel getPnlRodapeManipularEntidade(JButton btnAtualizar, JButton btnDeletar, JButton btnLimparCampos,JButton btnBotaoSair,JButton btnVoltar) {
+
+    public JPanel getPnlRodapeManipularEntidade(JButton btnAtualizar, JButton btnDeletar, JButton btnLimparCampos, JButton btnBotaoSair, JButton btnVoltar) {
 
         if (pnlRodape == null) {
 
@@ -52,9 +55,10 @@ public class GeraRodape {
         }
         return pnlRodape;
     }
-    public JPanel getPnlRodapeAlugarVeiculo(JButton btnAlugar, JButton btnPesquisar, JButton btnVoltar, JButton btnSair){
 
-         if (pnlRodape == null) {
+    public JPanel getPnlRodapeAlugarVeiculo(JButton btnAlugar, JButton btnPesquisar, JButton btnVoltar, JButton btnSair) {
+
+        if (pnlRodape == null) {
 
             pnlRodape = new JPanel();
             pnlRodape.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -67,7 +71,8 @@ public class GeraRodape {
         }
         return pnlRodape;
     }
-    public JPanel getPnlRodapeLogin(JButton btnLogin, JButton btnVoltar){
+
+    public JPanel getPnlRodapeLogin(JButton btnLogin, JButton btnVoltar) {
 
         if (pnlRodape == null) {
 
@@ -79,7 +84,8 @@ public class GeraRodape {
         }
         return pnlRodape;
     }
-    public JPanel getPnlRodapeTelaInicial(JButton btnBotaoSair, JButton btnVoltar){
+
+    public JPanel getPnlRodapeTelaInicial(JButton btnBotaoSair, JButton btnVoltar) {
 
         if (pnlRodape == null) {
 
@@ -88,6 +94,21 @@ public class GeraRodape {
 
             pnlRodape.add(btnBotaoSair);
             pnlRodape.add(btnVoltar);
+        }
+        return pnlRodape;
+    }
+
+    public JPanel getPnlRodapeDevolverVeiculo(JButton btnDevolver, JButton btnVoltar, JButton btnSair) {
+
+        if (pnlRodape == null) {
+
+            pnlRodape = new JPanel();
+            pnlRodape.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+            pnlRodape.add(btnDevolver);
+            pnlRodape.add(btnVoltar);
+            pnlRodape.add(btnSair);
+
         }
         return pnlRodape;
     }
