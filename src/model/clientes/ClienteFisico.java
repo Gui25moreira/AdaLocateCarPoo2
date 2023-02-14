@@ -6,9 +6,8 @@ public class ClienteFisico extends Cliente{
     private String dataDeNascimento;
     private String idade;
 
-    public ClienteFisico(String nome, String identificador, String dataDeNascimento,Endereco endereco,Contato contato) {
-        super(nome, identificador,endereco,contato);
-        this.dataDeNascimento = dataDeNascimento;
+    public ClienteFisico(String nome, String identificador, String senha,Endereco endereco,Contato contato) {
+        super(nome, identificador,senha,endereco,contato);
     }
 
     public String getIdade() {

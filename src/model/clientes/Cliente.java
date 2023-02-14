@@ -13,17 +13,20 @@ public class Cliente implements Comparable, Serializable, Entidade {
     private String identificador;
     private Endereco endereco;
     private Contato contato;
+    private String senha;
     private Veiculo[] veiculo;
     private BigDecimal debito;
 
     public Cliente() {
     }
 
-    public Cliente(String nome, String identificador, Endereco endereco, Contato contato) {
+    public Cliente(String nome, String identificador,String senha, Endereco endereco, Contato contato) {
         this.nome = nome;
         this.identificador = identificador;
         this.endereco = endereco;
         this.contato = contato;
+        this.senha = senha;
+
         //this.idade = calculaIdade(dataDeNascimento);
     }
 
@@ -62,6 +65,14 @@ public class Cliente implements Comparable, Serializable, Entidade {
 
     public void setIdentificador(String identificador) {
         this.identificador = identificador;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     @Override

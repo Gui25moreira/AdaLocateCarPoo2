@@ -6,8 +6,8 @@ import model.veiculos.Veiculo;
 public class Aluguel extends Sistema {
 
 
-    public Aluguel(String identificador, String data, String local) {
-        super(identificador, data, local);
+    public Aluguel( Veiculo veiculo, Cliente cliente) {
+        super(veiculo, cliente);
     }
 
     public boolean alugar(){
@@ -18,7 +18,7 @@ public class Aluguel extends Sistema {
         return "Aluguel{" +
                 "Identificador='" + getId() + "'," +
                 "Data de aluguel='" + this.getData() + '\'' +
-                "Local do aluguel='" + this.getLocal() + '\'' +
+                "Veiculo alugado='" + this.getVeiculo().getModelo()  + '\'' +
                 '}';
     }
 }

@@ -5,6 +5,7 @@ import model.repositorys.Entidade;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.EnumMap;
 
 public class Veiculo implements Comparable, Serializable, Entidade{
 
@@ -13,7 +14,7 @@ public class Veiculo implements Comparable, Serializable, Entidade{
     private String marca;
     private String placa;
     private String tipoDoVeiculo;
-    private BigDecimal valorAluguel;
+    private int valorAluguel;
     private boolean isAlugado;
     private Cliente cliente;
 
@@ -26,6 +27,16 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         this.marca = marca;
         this.anoDeFabricacao = anoDeFabricacao;
         this.tipoDoVeiculo = tipoDoVeiculo;
+        this.isAlugado =false;
+        if(tipoDoVeiculo.equals("Pequeno")){
+            this.valorAluguel =  100;
+        }else if(tipoDoVeiculo.equals("Medio")){
+            this.valorAluguel = 150;
+        }else if(tipoDoVeiculo.equals("SUV")){
+            this.valorAluguel =  200;
+    }else{
+            System.out.println("Digite uma opção de veículo válida!");
+        }
     }
 
     @Override
@@ -69,11 +80,11 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         this.placa = placa;
     }
 
-    public BigDecimal getValorAluguel() {
+    public int getValorAluguel() {
         return valorAluguel;
     }
 
-    public void setValorAluguel(BigDecimal valorAluguel) {
+    public void setValorAluguel(int valorAluguel) {
         this.valorAluguel = valorAluguel;
     }
 
@@ -93,11 +104,21 @@ public class Veiculo implements Comparable, Serializable, Entidade{
         this.tipoDoVeiculo = tipoDoVeiculo;
     }
 
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
     public String toString() {
         return "Veiculo{" +
                 "Modelo='" + getModelo() + "'," +
                 '\'' +
                 "Placa='" + getId() + '\'' +
+                "IsAlugado='" + isAlugado() + "'," +
+                '\'' +
                 '}';
     }
 }

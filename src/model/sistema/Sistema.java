@@ -5,46 +5,27 @@ import model.repositorys.Entidade;
 import model.veiculos.Veiculo;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
-public class Sistema implements Comparable, Serializable{
+public class Sistema implements Comparable, Serializable, Entidade{
 
-    private String identificador;
-    private String data;
-    private String local;
-    private String horario;
+    private LocalDateTime data;
     private Veiculo veiculo;
     private Cliente cliente;
 
-    public Sistema(String identificador, String data, String local) {
-        this.identificador = identificador;
-        this.data = data;
-        this.local = local;
+    public Sistema(Veiculo veiculo, Cliente cliente) {
+
+        this.data = LocalDateTime.now();
+        this.veiculo = veiculo;
+        this.cliente = cliente;
+
     }
 
-    public String getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getLocal() {
-        return local;
-    }
-
-    public void setLocal(String local) {
-        this.local = local;
-    }
-
-    public String getHorario() {
-        return horario;
-    }
-
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
 
     public Veiculo getVeiculo() {
         return veiculo;
@@ -68,6 +49,6 @@ public class Sistema implements Comparable, Serializable{
     }
 
     public String getId() {
-        return identificador;
+        return data.toString();
     }
 }

@@ -2,6 +2,9 @@ package view.clientes;
 
 
 
+import view.TelaInicial;
+import view.services.GeraRodape;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,14 +20,15 @@ public class TelaInicialClientes extends JFrame {
     //Botões
 
     protected JButton btnCadastrarCliente;
-    protected JButton btnAlterarCliente;
     protected JButton btnConsultarVeiculo;
     protected JButton btnConsultarClientes;
-    protected JButton btnConsultarDevolucoes;
-    protected JButton btnListarAlugueis;
+
     protected JButton btnDevolverVeiculo;
     protected JButton btnAlugarVeiculo;
 
+    protected JButton btnBotaoSair = new JButton("Sair");
+    protected JButton btnVoltar = new JButton("Voltar");
+    protected GeraRodape pnlRodape = new GeraRodape();
 
 
     public TelaInicialClientes(){
@@ -34,12 +38,13 @@ public class TelaInicialClientes extends JFrame {
     private void incializar(){
         setLayout(null);
         this.setTitle("Tela de Inicio - AdaLocateCar");
-        this.setSize(500,300);
         this.getContentPane().setLayout(new BorderLayout());
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.getContentPane().add(getPnlClientes());
+        this.getContentPane().add(getPnlClientes(),BorderLayout.CENTER);
+        this.getContentPane().add(pnlRodape.getPnlRodapeTelaInicial(btnBotaoSair,btnVoltar),BorderLayout.PAGE_END);
+        this.pack();
     }
 
     protected void btnCadastrarCliente(ActionEvent ev){
@@ -59,10 +64,20 @@ public class TelaInicialClientes extends JFrame {
           tela.setVisible(true);
 
     }
+    protected void btnAlugarVeiculo(ActionEvent ev){
+        escolha = "3";
+        TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+        setVisible(false);
+        tela.setLocationRelativeTo(null);
+        tela.setVisible(true);
+    }
 
     private void eventos(){
         btnCadastrarCliente.addActionListener(this::btnCadastrarCliente);
         btnConsultarClientes.addActionListener(this::btnConsultarClientes);
+        btnAlugarVeiculo.addActionListener(this::btnAlugarVeiculo);
+        btnVoltar.addActionListener(this::btnVoltar);
+        btnBotaoSair.addActionListener(this::btnBotaoSair);
     }
 
 
@@ -71,46 +86,42 @@ public class TelaInicialClientes extends JFrame {
 //        new FlowLayout(FlowLayout.CENTER)
         if(pnlClientes ==null){
             pnlClientes = new JPanel();
-            pnlClientes.setLayout(new GridLayout(4,2, 15,15));
+            pnlClientes.setLayout(new GridLayout(5,1, 15,15));
 
             btnCadastrarCliente = new JButton("Cadastrar Cliente");
             btnConsultarClientes = new JButton("Consultar Cliente");
-            btnAlterarCliente = new JButton("Alterar Cliente");
 
             btnConsultarVeiculo = new JButton("Consultar Veículo");
             btnAlugarVeiculo = new JButton("Alugar Veículo");
             btnDevolverVeiculo = new JButton("Devolver Veículo");
 
-            btnConsultarDevolucoes = new JButton("Consultar Devoluções");
-            btnListarAlugueis = new JButton("Listar Alugueis");
-
-
             btnCadastrarCliente.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnConsultarClientes.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
-            btnAlterarCliente.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
 
             btnConsultarVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnAlugarVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
             btnDevolverVeiculo.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
 
-            btnConsultarDevolucoes.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
-            btnListarAlugueis.setPreferredSize(new Dimension(larguraBtn, alturaBtn));
-
-
             pnlClientes.add(btnCadastrarCliente);
             pnlClientes.add(btnConsultarClientes);
-            pnlClientes.add(btnAlterarCliente);
 
 
             pnlClientes.add(btnConsultarVeiculo);
             pnlClientes.add(btnAlugarVeiculo);
             pnlClientes.add(btnDevolverVeiculo);
 
-            pnlClientes.add(btnConsultarDevolucoes);
-            pnlClientes.add(btnListarAlugueis);
-
-
         }
         return pnlClientes;
+    }
+    protected void btnBotaoSair(ActionEvent ev){
+        this.setVisible(false);
+        this.dispose();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    }
+    protected void btnVoltar(ActionEvent ev){
+        this.setVisible(false);
+        this.dispose();
+        TelaInicial tela = new TelaInicial();
+        tela.setVisible(true);
     }
 }

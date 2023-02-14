@@ -10,7 +10,8 @@ public class JTableModelVeiculo extends AbstractTableModel {
 
     private final String[] nomesColunas = {
             "Modelo",
-            "Placa"
+            "Placa",
+            "Valor"
     };
 
     private final List<Veiculo> mLista;
@@ -39,6 +40,8 @@ public class JTableModelVeiculo extends AbstractTableModel {
                 return mLista.get(rowIndex).getModelo();
             case 1:
                 return mLista.get(rowIndex).getId();
+            case 2:
+                return mLista.get(rowIndex).getValorAluguel();
             default:
                 return 0;
         }
@@ -50,19 +53,20 @@ public class JTableModelVeiculo extends AbstractTableModel {
 
     public Class getColClass(int coluna){
         switch (coluna){
-            case 0,1:
+            case 0,1,2:
                 return String.class;
             default:
                 return null;
         }
     }
 
-    public Cliente getVeiculo(int linha){
-        Cliente clienteLinha = new Cliente();
-        clienteLinha.setNome(mLista.get(linha).getModelo());
-        clienteLinha.setIdentificador(mLista.get(linha).getId());
+    public Veiculo getVeiculo(int linha){
+        Veiculo veiculoLinha = new Veiculo();
+        veiculoLinha.setModelo(mLista.get(linha).getModelo());
+        veiculoLinha.setPlaca(mLista.get(linha).getId());
+        veiculoLinha.setValorAluguel(mLista.get(linha).getValorAluguel());
 
-        return clienteLinha;
+        return veiculoLinha;
     }
 
 
