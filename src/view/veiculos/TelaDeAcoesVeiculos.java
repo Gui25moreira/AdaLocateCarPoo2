@@ -3,6 +3,7 @@ package view.veiculos;
 
 import model.JTableModelVeiculo;
 import model.clientes.Cliente;
+import model.repositorys.clientes.ClienteEmArquivoRepository;
 import model.repositorys.sistema.AlugueEmArquivoRepository;
 import model.repositorys.sistema.DevolucaoEmArquivoRepository;
 import model.repositorys.veiculos.VeiculoEmArquivoRepository;
@@ -11,6 +12,7 @@ import model.sistema.Devolucao;
 import model.veiculos.Veiculo;
 import view.clientes.TelaDeAcoesClientes;
 import view.services.GeraRodape;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,6 +38,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
     protected VeiculoEmArquivoRepository repositorioDeVeiculos = new VeiculoEmArquivoRepository();
     protected AlugueEmArquivoRepository repositorioDeAlugueis = new AlugueEmArquivoRepository();
     protected DevolucaoEmArquivoRepository repositorioDeDevolucoes = new DevolucaoEmArquivoRepository();
+    protected ClienteEmArquivoRepository repositorioDeClientes = new ClienteEmArquivoRepository();
     Random gerador = new Random();
     protected JButton btnCadastro = new JButton("Cadastrar");
     protected JButton btnAlugar = new JButton("Alugar");
@@ -106,7 +109,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
             cliente = clienteLogado;
             incializarTelaDeConsultaDevolucao();
             this.eventos();
-        }else if (escolha.equals("10")) {
+        } else if (escolha.equals("10")) {
             cliente = clienteLogado;
             incializarTelaDeConsultaAluguel();
             this.eventos();
@@ -163,7 +166,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
     }
 
     private void incializarTelaDeConsultaAluguel() {
-
+        cliente.limpaListaVeiculos();
         List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos().stream().filter(v -> !v.isAlugado()).collect(Collectors.toList());
         JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
         jTable = new JTable(meuTable);
@@ -174,7 +177,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
             JTextField texto = new JTextField("Não existem veículos disponíveis!");
             this.getContentPane().add(texto, BorderLayout.LINE_START);
             this.getContentPane().add(pnlForm, BorderLayout.CENTER);
-            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
+            this.getContentPane().add(pnlRodape.getPnlRodapeTelaInicial(btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
             setarValoresCampos(jTable);
             this.setVisible(true);
             this.setResizable(false);
@@ -196,24 +199,22 @@ public class TelaDeAcoesVeiculos extends JFrame {
 
     private void incializarTelaDeConsultaDevolucao() {
 
-        List<Veiculo> veiculos = repositorioDeVeiculos.listarTodos().stream().filter(v -> cliente.getNome().equals(v.getCliente().getNome())).collect(Collectors.toList());
+        List<Veiculo> veiculos = cliente.getVeiculos();
 
-        JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
-        jTable = new JTable(meuTable);
-        JScrollPane scrollPane = new JScrollPane(jTable);
+        if (cliente.getVeiculos().size() == 0) {
+            JOptionPane.showMessageDialog(null, "O cliente não possui veículos alugados!", "Alerta", JOptionPane.WARNING_MESSAGE);
+            escolha = "0";
+            this.setVisible(false);
+            this.dispose();
+            TelaDeAcoesClientes tela = new TelaDeAcoesClientes(escolha);
+            tela.setVisible(true);
+            tela.setLocationRelativeTo(null);
 
-        if (veiculos.size() == 0) {
-            JTextField texto = new JTextField("Não há veículos alugados pelo cliente logado!");
-            this.getContentPane().add(texto, BorderLayout.LINE_START);
-            this.getContentPane().add(getPnlFormDevolucao(), BorderLayout.CENTER);
-            this.getContentPane().add(pnlRodape.getPnlRodapeAlugarVeiculo(btnAlugar, btnPesquisar, btnVoltarTelaClientes, btnBotaoSair), BorderLayout.PAGE_END);
-            setarValoresCamposDevolucao(jTable);
-            this.setVisible(true);
-            this.setResizable(false);
-            this.setLocationRelativeTo(null);
-            this.pack();
-            this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         } else {
+
+            JTableModelVeiculo meuTable = new JTableModelVeiculo(veiculos);
+            jTable = new JTable(meuTable);
+            JScrollPane scrollPane = new JScrollPane(jTable);
             this.getContentPane().add(scrollPane, BorderLayout.LINE_START);
             this.getContentPane().add(getPnlFormDevolucao(), BorderLayout.CENTER);
             this.getContentPane().add(pnlRodape.getPnlRodapeDevolverVeiculo(btnDevolver, btnVoltar, btnBotaoSair), BorderLayout.PAGE_END);
@@ -224,9 +225,7 @@ public class TelaDeAcoesVeiculos extends JFrame {
             this.pack();
             this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
-
     }
-
 
     public JPanel getPnlFormCadastroVeiculo() {
 
@@ -321,15 +320,15 @@ public class TelaDeAcoesVeiculos extends JFrame {
             pnlFormAlugarVeicuo = new JPanel();
             pnlFormAlugarVeicuo.setLayout(new GridLayout(6, 1, 20, 15));
 
-            lblMarca = new JLabel("Marca do veículo");
+            lblMarca = new JLabel("Marca do veículo:");
             txtMarca = new JTextField(tamanhoColunasTextField);
             txtMarca.setEditable(false);
 
-            lblPlaca = new JLabel("Placa Do veículo");
+            lblPlaca = new JLabel("Placa Do veículo:");
             txtPlaca = new JTextField(tamanhoColunasTextField);
             txtPlaca.setEditable(false);
 
-            lblModelo = new JLabel("Modelo do veículo");
+            lblModelo = new JLabel("Modelo do veículo:");
             txtModelo = new JTextField(tamanhoColunasTextField);
             txtModelo.setEditable(false);
 
@@ -337,11 +336,11 @@ public class TelaDeAcoesVeiculos extends JFrame {
             txtTipoDeVeiculo = new JTextField(tamanhoColunasTextField);
             txtTipoDeVeiculo.setEditable(false);
 
-            lblAnoDeFabricacao = new JLabel("Ano de fabricação do veículo");
+            lblAnoDeFabricacao = new JLabel("Ano de fabricação do veículo:");
             txtAnoDeFabricacao = new JTextField(tamanhoColunasTextField);
             txtAnoDeFabricacao.setEditable(false);
 
-            lblValorDoAlguel = new JLabel("Valor do Aluguel");
+            lblValorDoAlguel = new JLabel("Valor diária:");
             txtValorDoAluguel = new JTextField(tamanhoColunasTextField);
             txtValorDoAluguel.setEditable(false);
 
@@ -461,6 +460,8 @@ public class TelaDeAcoesVeiculos extends JFrame {
         Veiculo veiculo = repositorioDeVeiculos.consultar(placa);
         veiculo.setAlugado(true);
         veiculo.setCliente(cliente);
+        cliente.setVeiculos(veiculo);
+        repositorioDeClientes.atualizar(cliente);
         Aluguel aluguel = new Aluguel(veiculo, cliente);
         veiculo.setAluguel(aluguel);
         repositorioDeVeiculos.atualizar(veiculo);
@@ -477,15 +478,18 @@ public class TelaDeAcoesVeiculos extends JFrame {
         Veiculo veiculo = repositorioDeVeiculos.consultar(txtPlaca.getText());
         String idAluguel = txtDataDoAluguel.getText();
         Aluguel aluguel = (Aluguel) repositorioDeAlugueis.consultar(idAluguel);
-        Devolucao devolucao = new Devolucao(veiculo,cliente,aluguel);
+        Devolucao devolucao = new Devolucao(veiculo, cliente, aluguel);
         veiculo.setAlugado(false);
         veiculo.setCliente(null);
+        cliente.removeVeiculo(veiculo);
+        repositorioDeClientes.atualizar(cliente);
         repositorioDeVeiculos.atualizar(veiculo);
         String valorAPagar = devolucao.getValorAPagar().toString();
-        JOptionPane.showMessageDialog(null, "Veiculo Devolvido com sucesso!", "Confirmação", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(null," O valor á pagar é-> " +valorAPagar);
+        JOptionPane.showMessageDialog(null, " O valor a pagar foi Veiculo Devolvido com sucesso!", "Confirmação", JOptionPane.WARNING_MESSAGE);
         this.setVisible(false);
         this.dispose();
-        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha,cliente);
+        TelaDeAcoesVeiculos tela = new TelaDeAcoesVeiculos(escolha, cliente);
         tela.setVisible(true);
         tela.setLocationRelativeTo(null);
     }

@@ -6,6 +6,7 @@ import model.veiculos.Veiculo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Cliente implements Comparable, Serializable, Entidade {
 
@@ -26,7 +27,7 @@ public class Cliente implements Comparable, Serializable, Entidade {
         this.endereco = endereco;
         this.contato = contato;
         this.senha = senha;
-        veiculos = new ArrayList<>();
+        this.veiculos = new ArrayList<>();
 
     }
 
@@ -83,7 +84,11 @@ public class Cliente implements Comparable, Serializable, Entidade {
         this.veiculos.add(veiculo);
     }
     public void removeVeiculo(Veiculo veiculo){
-        this.veiculos.remove(veiculo);
+        List<Veiculo> vs = this.veiculos.stream().filter(v -> !v.getId().equals(veiculo.getId())).collect(Collectors.toList());
+        this.veiculos = vs;
+    }
+    public void limpaListaVeiculos(){
+        this.veiculos.clear();
     }
 
     @Override
